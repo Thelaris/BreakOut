@@ -6,7 +6,7 @@ public class ExplodeBricksCapsule : MonoBehaviour {
 	private Collider brick;
 	private bool isDone = false;
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		Destroy (gameObject, 0.1f);
 	}
 	
@@ -21,8 +21,8 @@ public class ExplodeBricksCapsule : MonoBehaviour {
 		if (other.gameObject.tag.Equals ("Brick")) {
 		//	print ("Is brick");
 			brick = other;
-			if (other.GetComponent<Bricks> ().brickTypeNum == 4) {
-				other.GetComponent<Bricks> ().ExplodeBricks ();
+			if (other.GetComponent<Bricks> ().brickTypeNum == 12) {
+			//	other.GetComponent<Bricks> ().ExplodeBricks ();
 				other.GetComponent<Bricks> ().DestroyBrick ();
 			} else {
 				other.GetComponent<Bricks> ().DestroyBrick ();

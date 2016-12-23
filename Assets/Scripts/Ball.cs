@@ -146,14 +146,14 @@ public class Ball : MonoBehaviour {
 				GetComponent<Rigidbody> ().AddForce (transform.up * currentSpeed);
 				bricks = GameObject.FindGameObjectsWithTag ("Brick");
 				foreach (GameObject currentBrick in bricks) {
-					if (currentBrick.transform.position.y == GM.instance.brickSpawnYDefault - GM.instance.rows - 1) {
+					if (currentBrick.transform.position.y == SpawnBricks.instance.brickSpawnYDefault - SpawnBricks.instance.rows - 1) {
 						brickOnBottom = true;						
 					}
 
 			}
 				if (brickOnBottom == false && GM.instance.fallingBricks == true) {
 					foreach (GameObject currentBrick in bricks) {
-						currentBrick.transform.position = new Vector3 (currentBrick.transform.position.x, currentBrick.transform.position.y - GM.instance.brickYSpawnGap, currentBrick.transform.position.z);
+						currentBrick.transform.position = new Vector3 (currentBrick.transform.position.x, currentBrick.transform.position.y - SpawnBricks.instance.brickYSpawnGap, currentBrick.transform.position.z);
 					}
 				} else {
 					brickOnBottom = false;

@@ -8,10 +8,23 @@ public class Bricks : MonoBehaviour {
 	public int easyBrickBreaks;
 	public int mediumBrickBreaks;
 	public int hardBrickBreaks;
+	public Texture blueBrick;
+	public Texture darkBlueBrick;
+	public Texture darkGreyBrick;
+	public Texture greenBrick;
+	public Texture greyBrick;
+	public Texture hotPinkBrick;
+	public Texture hotPurpleBrick;
+	public Texture orangeBrick;
+	public Texture purpleBrick;
+	public Texture redBrick;
+	public Texture yellowBrick;
+	public Texture explodeBricks;
+	public Texture invisLevelEditorBrick;
+	public Texture levelEditorBrick;
 	public Texture easyBricks;
 	public Texture mediumBricks;
 	public Texture hardBricks;
-	public Texture explodeBricks;
 	public Texture smallCrackedTex;
 	public Texture mediumCrackedTex;
 	public Texture mostCrackedTex;
@@ -23,11 +36,13 @@ public class Bricks : MonoBehaviour {
 	private int numOfHits;
 	private GameObject[] bricks;
 	private bool doOnce;
+	public bool levelEditor = false;
+	//private GameObject capsule;
 
 	void Start() {
 		doOnce = true;
 
-		AttachSpriteSheet ();
+	//	AttachSpriteSheet ();
 
 	}
 
@@ -36,13 +51,16 @@ public class Bricks : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.tag.Equals ("Ball") && GM.instance.thruBrick == true) {
+			DestroyBrick ();
+		}
 		if (other.gameObject.tag.Equals ("Ball") || other.gameObject.tag.Equals("GunLaser")) {
 			CheckShouldDestroy ();
 		}
 	}
 
 	public void AttachSpriteSheet () {
-		if (brickTypeNum == 4) {
+		if (brickTypeNum == 12 && GetComponent<AnimateSpriteSheet>() == null) {
 			gameObject.AddComponent <AnimateSpriteSheet> ();
 		}
 	}
@@ -55,50 +73,25 @@ public class Bricks : MonoBehaviour {
 		} else {
 
 
-			if (brickTypeNum == 1) {
+			if (brickTypeNum == 1 || brickTypeNum == 2 || brickTypeNum == 4 || brickTypeNum == 5 || brickTypeNum == 6 || brickTypeNum == 7 || brickTypeNum == 8 || brickTypeNum == 9 || brickTypeNum == 10 || brickTypeNum == 11 || brickTypeNum == 12) {
 				DestroyBrick ();
 			}
-
-			if (brickTypeNum == 2) {
-				if (numOfHits == mediumBrickBreaks) {
-					DestroyBrick ();
-				} else {
-					/*
-				GetComponent<Renderer> ().material.EnableKeyword("_NORMALMAP");
-				GetComponent<Renderer> ().material.SetTexture("_MainTex", mediumCrackedTex);
-				GetComponent<Renderer> ().material.SetFloat("_BumpScale", bumpScale);
-				*/
-				}
-			}
-
 
 			if (brickTypeNum == 3) {
-				if (numOfHits == hardBrickBreaks) {
-					DestroyBrick ();
-				} else if (numOfHits == 1) {
-					/*
-				GetComponent<Renderer> ().material.EnableKeyword("_NORMALMAP");
-				GetComponent<Renderer> ().material.SetTexture("_MainTex", mediumCrackedTex);
-				GetComponent<Renderer> ().material.SetFloat("_BumpScale", bumpScale);
-				*/
-				} else if (numOfHits == 2) {
-					/*
-				GetComponent<Renderer> ().material.EnableKeyword("_NORMALMAP");
-				GetComponent<Renderer> ().material.SetTexture("_MainText", mostCrackedTex);
-				GetComponent<Renderer> ().material.SetFloat("_BumpScale", bumpScale);
-				*/
-				}
+				brickTypeNum = 5;
+				SetColour ();
 			}
 
-			if (brickTypeNum == 4) {
-				DestroyBrick ();
+			if (brickTypeNum == 13) {
+				brickTypeNum = 3;
+				SetColour ();
 			}
 		}
 	}
 
 	public void DestroyBrick() {
 		if (doOnce) {
-			if (brickTypeNum == 4) {
+			if (brickTypeNum == 12) {
 				ExplodeBricks ();
 			}
 			doOnce = false;
@@ -109,28 +102,55 @@ public class Bricks : MonoBehaviour {
 	}
 
 	public void SetColour() {
+		GetComponent<Renderer> ().enabled = true;
 		if (brickTypeNum == 1) {
-			//GetComponent<Renderer> ().material.color = new Color (0.5f, 0.5f, 0.5f, 1);
-			GetComponent<Renderer> ().material.SetTexture ("_MainTex", easyBricks);
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", blueBrick);
 		} else if (brickTypeNum == 2) {
-			//GetComponent<Renderer> ().material.color = new Color (0, 0, 1, 1);
-			GetComponent<Renderer> ().material.SetTexture ("_MainTex", mediumBricks);
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", darkBlueBrick);
 		} else if (brickTypeNum == 3) {
-			GetComponent<Renderer> ().material.SetTexture ("_MainTex", hardBricks);
-			//GetComponent<Renderer> ().material.color = new Color (1, 0.92f, 0.016f, 1);
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", darkGreyBrick);
 		} else if (brickTypeNum == 4) {
-			GetComponent<Renderer> ().material.SetTexture ("_MainTex", explodeBricks);
-		//	gameObject.tag = "ExplodeBrick";
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", greenBrick);
 		} else if (brickTypeNum == 5) {
-		//GetComponent<Renderer> ().material.color = new Color (0, 0, 0, 1);
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", greyBrick);
+		} else if (brickTypeNum == 6) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", hotPinkBrick);
+		} else if (brickTypeNum == 7) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", hotPurpleBrick);
+		} else if (brickTypeNum == 8) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", orangeBrick);
+		} else if (brickTypeNum == 9) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", purpleBrick);
+		} else if (brickTypeNum == 10) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", redBrick);
+		} else if (brickTypeNum == 11) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", yellowBrick);
+		} else if (brickTypeNum == 12) {
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", explodeBricks);
+		} else if (brickTypeNum == 13) {
+			GetComponent<Renderer> ().enabled = false;
+		} else if (brickTypeNum == 98) {
+			//GetComponent<Renderer> ().enabled = false;
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", invisLevelEditorBrick);
+		} else if (brickTypeNum == 99) {
+			//GetComponent<Renderer> ().enabled = false;
+			GetComponent<Renderer> ().material.SetTexture ("_MainTex", levelEditorBrick);
 		}
+		AttachSpriteSheet ();
 	}
 
 	void Update() {
-		if (GM.instance.thruBrick == true) {
-			GetComponent<Collider> ().isTrigger = true;
-		} else {
-			GetComponent<Collider> ().isTrigger = false;
+		if (GM.instance != null) {
+
+			if (brickTypeNum == 0) {
+				Destroy (gameObject);
+			}
+
+			if (GM.instance.thruBrick == true) {
+				GetComponent<Collider> ().isTrigger = true;
+			} else {
+				GetComponent<Collider> ().isTrigger = false;
+			} 
 		}
 	}
 
@@ -156,9 +176,41 @@ public class Bricks : MonoBehaviour {
 			}
 		}
 	}
-	public void ExplodeBricks() {
-		Instantiate (capsule, transform.position, Quaternion.Euler (0f, 0f, -90f));
 
+	public void ExpandExploding() {
+		/* if (brickTypeNum == 4) {
+		//	GameObject[] bricksToChange = new GameObject[4];
+
+
+
+			bricks = GameObject.FindGameObjectsWithTag ("Brick");
+			foreach (GameObject cloneBrick in bricks) {
+				if (cloneBrick.GetComponent<Bricks> ().arrayY == GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == GetComponent<Bricks> ().arrayX) {
+					bricksToChange [0] = cloneBrick;
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == GetComponent<Bricks> ().arrayY + 1 && cloneBrick.GetComponent<Bricks> ().arrayX == GetComponent<Bricks> ().arrayX) {
+					bricksToChange [1] = cloneBrick;
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == GetComponent<Bricks> ().arrayX + 1) {
+					bricksToChange [2] = cloneBrick;
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == GetComponent<Bricks> ().arrayX - 1) {
+					bricksToChange [3] = cloneBrick;
+				}
+			}
+
+			foreach (GameObject brick in bricksToChange) {
+				brick.GetComponent<Bricks> ().brickTypeNum = 4;
+				brick.GetComponent<Bricks> ().SetColour ();
+				brick.GetComponent<Bricks> ().AttachSpriteSheet ();
+			}
+		} */
+	}
+
+	public void ExplodeBricks() {
+	
+		//	Instantiate (capsule, transform.position, Quaternion.Euler (0f, 0f, -90f));
+		capsule = transform.Find("Capsule").gameObject;
+
+		capsule.SetActive(true);
+		capsule.transform.parent = null;
 	
 
 
@@ -195,5 +247,12 @@ public class Bricks : MonoBehaviour {
 			}
 		} */
 	}
-		
+
+	void OnMouseDown() {
+		if (LevelEditor.instance != null && levelEditor == false) {
+			GetComponent<Bricks> ().brickTypeNum = LevelEditor.instance.brickType;
+			GetComponent<Bricks> ().SetColour ();
+		//	GetComponent<Bricks> ().AttachSpriteSheet ();
+		}
+	}
 }

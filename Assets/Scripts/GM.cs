@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GM : MonoBehaviour {
 
 	public int lives = 5;
-	public int bricks = 0;
+	//public int bricks = 0;
 	public float resetDelay = 1f;
 	public Text livesText;
 	public GameObject gameOver;
@@ -18,7 +18,7 @@ public class GM : MonoBehaviour {
 	public GameObject deathParticles;
 	public static GM instance = null;
 	//public bool moveToNextLevel;
-	public int cols;
+/*	public int cols;
 	public int rows;
 	public float brickSpawnXDefault = -10.125f;
 	public float brickSpawnYDefault = 8f;
@@ -26,8 +26,9 @@ public class GM : MonoBehaviour {
 	public float brickSpawnY = 8f;
 	public Vector3 brickSpawnLocation = new Vector3 (-10.125f, 8f, 0f);
 	public float brickXSpawnGap = 2.25f;
-	public float brickYSpawnGap = 1.25f;
+	public float brickYSpawnGap = 1.25f; */
 	public int levelNum = 1;
+
 	public GameObject ball;
 	public GameObject cloneBall;
 	public GameObject powerUpHolder;
@@ -46,11 +47,13 @@ public class GM : MonoBehaviour {
 	private GameObject[] spawnedPowerUps;
 	private GameObject[] gunLasers;
 	private GameObject[] paddleGuns;
-	private Bricks myBrick;
-	private int brickType;
+	private GameObject[] bricksToChange;
+	private int brickChangeCounter;
+//	private Bricks myBrick;
+//	private int brickType;
 
 
-	public int[,] bricksArray = new int[,] {
+/*	public int[,] bricksArray = new int[,] {
 		//0  1  2  3  4  5  6  7  8  9  10 11 12
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //0
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //1
@@ -74,7 +77,7 @@ public class GM : MonoBehaviour {
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }  //19
 
 	};
-
+*/
 
 	void Start () {
 		// Check for only 1 instance of this script, otherwise destroy parent object
@@ -90,10 +93,25 @@ public class GM : MonoBehaviour {
 	public void Setup() {
 		clonePaddle = Instantiate (paddle, transform.position, Quaternion.identity) as GameObject;
 
-		SpawnBricks();
+	//	gameObject.AddComponent<SpawnBricks> ();
+
+		if(SpawnBricks.instance.bricks == 0) {
+		SpawnBricks.instance.levelNum = levelNum;
+
+		SpawnBricks.instance.bricksPrefab = bricksPrefab;
+
+		SpawnBricks.instance.InstantiateBricks ();
+		//SpawnBricks();
+		}
+		GameObject[] allBricks = GameObject.FindGameObjectsWithTag ("Brick");
+		foreach (GameObject brick in allBricks) {
+			if (brick.GetComponent<Bricks> ().brickTypeNum == 99) {
+				brick.GetComponent<Bricks> ().brickTypeNum = 0;
+			}
+		}
 	}
 
-	void SpawnBricks() {
+/*	void SpawnBricks() {
 		SetLevel ();
 
 		for (int i = 0; i < rows; i++)
@@ -297,13 +315,13 @@ public class GM : MonoBehaviour {
 		myBrick = cloneBrick.GetComponent<Bricks> ();
 		myBrick.brickTypeNum = brickType;
 		myBrick.SetColour ();
-	}
+	} */
 
 
 	void CheckGameOver() {
 
 		// Level Complete
-		if (bricks < 1) {
+		if (SpawnBricks.instance.bricks < 1) {
 			youWon.SetActive (true);
 			Time.timeScale = .25f;
 			balls = GameObject.FindGameObjectsWithTag ("Ball");
@@ -353,12 +371,12 @@ public class GM : MonoBehaviour {
 
 	void Won () {
 		Time.timeScale = 1f;
-		levelNum++;
+		SpawnBricks.instance.levelNum++;
 		//Instantiate (bricksPrefab2, transform.position, Quaternion.identity);
-		bricks = 0; // Reset Bricks
-		brickSpawnY = brickSpawnYDefault; // Reset brick spawning locations
-		brickSpawnX = brickSpawnXDefault; // Reset brick spawning locations
-		brickSpawnLocation = new Vector3 (brickSpawnX, brickSpawnY, 0f);
+		SpawnBricks.instance.bricks = 0; // Reset Bricks
+		SpawnBricks.instance.brickSpawnY = SpawnBricks.instance.brickSpawnYDefault; // Reset brick spawning locations
+		SpawnBricks.instance.brickSpawnX = SpawnBricks.instance.brickSpawnXDefault; // Reset brick spawning locations
+		SpawnBricks.instance.brickSpawnLocation = new Vector3 (SpawnBricks.instance.brickSpawnX, SpawnBricks.instance.brickSpawnY, 0f);
 
 		Destroy (clonePaddle);
 
@@ -366,7 +384,7 @@ public class GM : MonoBehaviour {
 
 		// Set up next level
 		SetupPaddle ();
-		SpawnBricks ();
+		SpawnBricks.instance.InstantiateBricks ();
 		//moveToNextLevel = true;
 	}
 
@@ -410,8 +428,8 @@ public class GM : MonoBehaviour {
 	}
 
 	public void DestroyBrick(Vector3 brickLocation, int brickType) {
-		bricks--;
-		if (brickType != 4) {
+		SpawnBricks.instance.bricks--;
+		if (brickType != 12) {
 			SpawnPowerUp (brickLocation);
 		}
 		CheckGameOver ();
@@ -456,6 +474,24 @@ public class GM : MonoBehaviour {
 			balls [0].GetComponent<Ball> ().currentSpeed = 1500f;
 			balls [0].GetComponent<Rigidbody> ().AddForce (balls [0].transform.up * forceOffset);
 		}
+	}
+
+	public void AddBricksToChange(GameObject brickToAdd) {
+		brickChangeCounter++;
+
+		System.Array.Resize (ref bricksToChange, brickChangeCounter);
+
+		bricksToChange [brickChangeCounter - 1] = brickToAdd;
+	}
+
+	public void SetExplodingBricks() {
+		foreach (GameObject brick in bricksToChange) {
+			brick.GetComponent<Bricks> ().brickTypeNum = 12;
+			brick.GetComponent<Bricks> ().SetColour ();
+			brick.GetComponent<Bricks> ().AttachSpriteSheet();
+		}
+		brickChangeCounter = 0;
+		System.Array.Resize (ref bricksToChange, brickChangeCounter);
 	}
 
 /*	public void FireBall() {

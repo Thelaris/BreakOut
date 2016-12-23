@@ -23,7 +23,7 @@ public class PowerUp : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 
-		powerUpType = Random.Range (1, 1);
+		powerUpType = Random.Range (1, 4);
 		SetPowerUp ();
 
 
@@ -39,7 +39,7 @@ public class PowerUp : MonoBehaviour {
 	public void SetPowerUp() {
 		// Good / 10
 		if (powerUpType == 1) {
-			powerUpNum = Random.Range (7, 8);
+			powerUpNum = Random.Range (1, 9);
 			print (powerUpType + " " + powerUpNum);
 
 			GetComponent<Renderer> ().material.SetTexture("_MainTex", goodPowerUpTex[powerUpNum - 1]);
@@ -227,7 +227,7 @@ public class PowerUp : MonoBehaviour {
 	void SetOffExploding() {
 		bricks = GameObject.FindGameObjectsWithTag ("Brick");
 		foreach (GameObject cloneBrick in bricks) {
-			if (cloneBrick.GetComponent<Bricks> ().brickTypeNum == 4) {
+			if (cloneBrick.GetComponent<Bricks> ().brickTypeNum == 12) {
 				cloneBrick.GetComponent<Bricks> ().DestroyBrick ();
 			}
 		}
@@ -236,21 +236,56 @@ public class PowerUp : MonoBehaviour {
 	void ExpandExploding() {
 		bricks = GameObject.FindGameObjectsWithTag ("Brick");
 		foreach (GameObject originBrick in bricks) {
-			
+			if (originBrick.GetComponent<Bricks> ().brickTypeNum == 12) {
 				foreach (GameObject cloneBrick in bricks) {
-				if (originBrick.GetComponent<Bricks> ().brickTypeNum == 4) {
-					// Need array of current exploding bricks to apply to
+					if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
+						GM.instance.AddBricksToChange (cloneBrick);
+					} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY + 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
+						GM.instance.AddBricksToChange (cloneBrick);
+					} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX + 1) {
+						GM.instance.AddBricksToChange (cloneBrick);
+					} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX - 1) {
+						GM.instance.AddBricksToChange (cloneBrick);
+					}
+				}
+			}
+		}
 
-					/*	if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX - 1) {
+		GM.instance.SetExplodingBricks ();
+
+
+
+		/* int i = 0;
+		GameObject[] explodingBricks = new GameObject[0];
+		bricks = GameObject.FindGameObjectsWithTag ("Brick");
+		foreach (GameObject originBrick in bricks) {
+			if (originBrick.GetComponent<Bricks> ().brickTypeNum == 4) {
+				
+				i++;
+				System.Array.Resize (ref explodingBricks, i);
+				explodingBricks [i - 1] = originBrick;
+
+			}
+		}
+
+
+
+		foreach (GameObject originBrick in bricks) {
+		foreach (GameObject cloneBrick in explodingBricks) {
+			
+				
+				// Need array of current exploding bricks to apply to
+					 
+				/*	if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && ameObject.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX - 1) {
 						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
 						cloneBrick.GetComponent<Bricks> ().SetColour ();
 						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet();
-					} */
-					if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
-						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
-						cloneBrick.GetComponent<Bricks> ().SetColour ();
-						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
-					} /* else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX + 1) {
+					} 
+				if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
+					cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
+					cloneBrick.GetComponent<Bricks> ().SetColour ();
+					cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY - 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX + 1) {
 						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
 						cloneBrick.GetComponent<Bricks> ().SetColour ();
 						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet();
@@ -262,22 +297,23 @@ public class PowerUp : MonoBehaviour {
 						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
 						cloneBrick.GetComponent<Bricks> ().SetColour ();
 						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet();
-					} */ else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY + 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
-						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
-						cloneBrick.GetComponent<Bricks> ().SetColour ();
-						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
-					} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX + 1) {
-						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
-						cloneBrick.GetComponent<Bricks> ().SetColour ();
-						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
-					} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX - 1) {
-						cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
-						cloneBrick.GetComponent<Bricks> ().SetColour ();
-						cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
-					}
+					}  else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY + 1 && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX) {
+					cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
+					cloneBrick.GetComponent<Bricks> ().SetColour ();
+					cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX + 1) {
+					cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
+					cloneBrick.GetComponent<Bricks> ().SetColour ();
+					cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
+				} else if (cloneBrick.GetComponent<Bricks> ().arrayY == originBrick.GetComponent<Bricks> ().arrayY && cloneBrick.GetComponent<Bricks> ().arrayX == originBrick.GetComponent<Bricks> ().arrayX - 1) {
+					cloneBrick.GetComponent<Bricks> ().brickTypeNum = 4;
+					cloneBrick.GetComponent<Bricks> ().SetColour ();
+					cloneBrick.GetComponent<Bricks> ().AttachSpriteSheet ();
 				}
 			}
-		}
+				
+
+		} */
 	}
 
 	void ZapBricks() {
@@ -285,8 +321,8 @@ public class PowerUp : MonoBehaviour {
 		int randBrickNum;
 		int randCol;
 
-		randBrickNum = Random.Range (0, GM.instance.bricks);
-		randCol = Random.Range (0, GM.instance.cols);
+		randBrickNum = Random.Range (0, SpawnBricks.instance.bricks);
+		randCol = Random.Range (0, SpawnBricks.instance.cols);
 
 		bricks[randBrickNum].GetComponent<Bricks> ().DestroySurroundBricks ();
 	}

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d65c51cae00aebf40ab9af39fe5a4aed
+timeCreated: 1482500179
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - cloneBall: {instanceID: 0}
+  - bricksPrefab: {fileID: 1019706572979112, guid: c314c1eef8d5da6439ce44972b9f909e,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

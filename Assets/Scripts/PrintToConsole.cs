@@ -41,7 +41,7 @@ public class PrintToConsole : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (LevelEditor.instance != null) {
+	/*	if (LevelEditor.instance != null) {
 			GetComponent<Renderer> ().enabled = true;
 			GetComponent<Collider> ().enabled = true;
 			transform.Find ("New Text").gameObject.GetComponent<Renderer> ().enabled = true;
@@ -49,10 +49,10 @@ public class PrintToConsole : MonoBehaviour {
 			GetComponent<Renderer> ().enabled = false;
 			GetComponent<Collider> ().enabled = false;
 			transform.Find ("New Text").gameObject.GetComponent<Renderer> ().enabled = false;
-		}
+		} */
 	}
 
-	void OnMouseDown() {
+	public void Print() {
 		GameObject[] bricks = GameObject.FindGameObjectsWithTag ("Brick");
 		foreach (GameObject brick in bricks) {
 			if (brick.GetComponent<Bricks> ().brickTypeNum == 98) {
@@ -69,15 +69,17 @@ public class PrintToConsole : MonoBehaviour {
 
 		for (int i = 0; i < rows; i++)
 		{
-			output += "{ ";
+			output += "," + System.Environment.NewLine + "{ ";
 			for (int j = 0; j < cols; j++) {
 				
 				output += bricksArray [i, j] + ", ";
 				//print (i + j);
 			}	
-			output += "}," + System.Environment.NewLine;
+			output += "}";
 		}
-		output += " }"; 
+		output += System.Environment.NewLine;
+		output = output.Remove (0, 1);
+		//output += " }"; 
 		print (output);
 		output = "";
 	}

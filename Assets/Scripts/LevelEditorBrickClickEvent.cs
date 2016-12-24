@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelEditorBrickClickEvent : MonoBehaviour {
 
 	public int brickType;
+	public GameObject selectorFrame;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,15 @@ public class LevelEditorBrickClickEvent : MonoBehaviour {
 	void OnMouseDown() {
 		if (GetComponent<Bricks> ().levelEditor == true) {
 			LevelEditor.instance.brickType = GetComponent<Bricks> ().brickTypeNum;
+
+			GameObject[] selectors = GameObject.FindGameObjectsWithTag ("Selector");
+			foreach (GameObject selector in selectors) {
+				Destroy (selector);
+			}
+
+			Vector3 pos = new Vector3 (transform.position.x, transform.position.y, transform.position.z - 1);
+
+			Instantiate (selectorFrame, pos, Quaternion.identity);
 		}
 	/*	GetComponent<Bricks> ().brickTypeNum = LevelEditor.instance.brickType;
 		GetComponent<Bricks> ().SetColour ();

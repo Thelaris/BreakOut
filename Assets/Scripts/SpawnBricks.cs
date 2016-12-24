@@ -74,7 +74,9 @@ public class SpawnBricks : MonoBehaviour {
 					brickType = bricksArray [i, j];
 					cloneBrick = Instantiate (bricksPrefab, brickSpawnLocation, Quaternion.identity);
 					SetBrickType (); // Based on array number
+					if (brickType != 99) {
 					bricks++; //Add to bricks to ensure all bricks are counted for
+					}
 					brickSpawnX += brickXSpawnGap; //Add to brick X location for next spawn
 					brickSpawnLocation = new Vector3 (brickSpawnX, brickSpawnY, 0f);
 
@@ -343,6 +345,31 @@ public class SpawnBricks : MonoBehaviour {
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  },
 			};
+		}
+		if (levelNum == 8) {
+			bricksArray = new int[,] {
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 12, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 0, 0, 13, 13, 0, 13, 13, 0, 0, 2, 2, },
+				{ 2, 2, 13, 13, 13, 13, 0, 13, 13, 13, 13, 2, 2, }
+			};
+
 		}
 	}
 }

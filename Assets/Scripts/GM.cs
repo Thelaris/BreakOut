@@ -27,7 +27,7 @@ public class GM : MonoBehaviour {
 	public Vector3 brickSpawnLocation = new Vector3 (-10.125f, 8f, 0f);
 	public float brickXSpawnGap = 2.25f;
 	public float brickYSpawnGap = 1.25f; */
-	public int levelNum = 1;
+	static public int levelNum = 1;
 
 	public GameObject ball;
 	public GameObject cloneBall;
@@ -79,12 +79,18 @@ public class GM : MonoBehaviour {
 	};
 */
 
+
 	void Start () {
 		// Check for only 1 instance of this script, otherwise destroy parent object
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
 			Destroy (gameObject);
+
+
+
+		GameObject scene = GameObject.FindGameObjectWithTag ("Scene");
+		scene.SetActive (true);
 
 		Setup ();
 	}
@@ -96,7 +102,7 @@ public class GM : MonoBehaviour {
 	//	gameObject.AddComponent<SpawnBricks> ();
 
 		if(SpawnBricks.instance.bricks == 0) {
-		SpawnBricks.instance.levelNum = levelNum;
+			SpawnBricks.instance.levelNum = LevelManager.instance.levelNum;
 
 		SpawnBricks.instance.bricksPrefab = bricksPrefab;
 
@@ -390,7 +396,7 @@ public class GM : MonoBehaviour {
 
 	void Reset() {
 		Time.timeScale = 1f;
-		SceneManager.LoadScene("Level01");
+		SceneManager.LoadScene("Game");
 	}
 
 	public void LoseLife() {

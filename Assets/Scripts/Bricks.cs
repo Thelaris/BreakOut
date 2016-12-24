@@ -60,9 +60,19 @@ public class Bricks : MonoBehaviour {
 	}
 
 	public void AttachSpriteSheet () {
-		if (brickTypeNum == 12 && GetComponent<AnimateSpriteSheet>() == null) {
+		if (brickTypeNum == 12 && GetComponent<AnimateSpriteSheet> () == null) {
 			gameObject.AddComponent <AnimateSpriteSheet> ();
+		} else if (brickTypeNum != 12 && GetComponent<AnimateSpriteSheet> () != null) {
+			DestroyImmediate (GetComponent<AnimateSpriteSheet> ());
+			ResetMatSize ();
 		}
+	}
+
+	void ResetMatSize () {
+		Vector2 offset = new Vector2(0.0f, 0.0f);
+		Vector2 size = new Vector2(1f, 1f);
+		GetComponent<Renderer>().sharedMaterial.SetTextureOffset("_MainTex", offset);
+		GetComponent<Renderer>().sharedMaterial.SetTextureScale("_MainTex", size);
 	}
 
 	public void CheckShouldDestroy(){
@@ -250,8 +260,10 @@ public class Bricks : MonoBehaviour {
 
 	void OnMouseDown() {
 		if (LevelEditor.instance != null && levelEditor == false) {
-			GetComponent<Bricks> ().brickTypeNum = LevelEditor.instance.brickType;
-			GetComponent<Bricks> ().SetColour ();
+			brickTypeNum = LevelEditor.instance.brickType;
+			SetColour ();
+
+			LevelEditor.instance.SetBricks ();
 		//	GetComponent<Bricks> ().AttachSpriteSheet ();
 		}
 	}

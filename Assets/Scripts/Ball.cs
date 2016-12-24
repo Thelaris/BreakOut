@@ -146,7 +146,7 @@ public class Ball : MonoBehaviour {
 				GetComponent<Rigidbody> ().AddForce (transform.up * currentSpeed);
 				bricks = GameObject.FindGameObjectsWithTag ("Brick");
 				foreach (GameObject currentBrick in bricks) {
-					if (currentBrick.transform.position.y == SpawnBricks.instance.brickSpawnYDefault - SpawnBricks.instance.rows - 1) {
+					if (currentBrick.transform.position.y == SpawnBricks.instance.brickSpawnYDefault - ((SpawnBricks.instance.rows - 1) * SpawnBricks.instance.brickYSpawnGap)) {
 						brickOnBottom = true;						
 					}
 

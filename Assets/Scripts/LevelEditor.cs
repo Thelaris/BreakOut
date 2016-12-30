@@ -27,17 +27,21 @@ public class LevelEditor : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 
-
+		Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.None;
 
 		GameObject scene = GameObject.FindGameObjectWithTag ("Scene");
 		scene.SetActive (true);
 
 	//	gameObject.AddComponent<SpawnBricks> ();
 
-		SpawnBricks.instance.levelNum = -1;
+		SpawnBricks.instance.levelNum = LevelManager.instance.levelNum; //-1
+
 		SpawnBricks.instance.bricksPrefab = brick;
 
 		SpawnBricks.instance.InstantiateBricks ();
+
+		SetBricks ();
 
 		//int i = 1;
 		for (int i = 1; i < 8; i++) {
@@ -81,6 +85,7 @@ public class LevelEditor : MonoBehaviour {
 	}
 
 	public void Reset() {
+		LevelManager.instance.levelNum = -1;
 		SceneManager.LoadScene ("LevelEditor");
 	}
 

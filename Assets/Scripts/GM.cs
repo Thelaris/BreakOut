@@ -37,6 +37,10 @@ public class GM : MonoBehaviour {
 	public bool splitBall = false;
 	public bool fallingBricks = false;
 	public float ballRotationOffset;
+	public GameObject LevelEditorButton;
+
+	public bool gamePaused = false;
+	float stopTimeScale = 1;
 
 	private GameObject clonePaddle;
 	private GameObject cloneBrick;
@@ -87,12 +91,42 @@ public class GM : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 
-
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
 
 		GameObject scene = GameObject.FindGameObjectWithTag ("Scene");
 		scene.SetActive (true);
 
+		if (LevelManager.instance.levelEditor == true) {
+			LevelEditorButton.SetActive (true);
+		} else {
+			LevelEditorButton.SetActive (false);
+		}
+
 		Setup ();
+	}
+
+	void Update() {
+		if (Input.GetButtonDown ("Cancel")) {
+			gamePaused = !gamePaused;
+			PauseGame ();
+			if (Time.timeScale == 0) {
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+			} else {
+				Cursor.visible = false;
+				Cursor.lockState = CursorLockMode.Locked;
+			}
+		}
+	}
+
+	void PauseGame() {
+		if (gamePaused) {
+			stopTimeScale = 0;
+		} else if (!gamePaused) {
+			stopTimeScale = 1;
+		}
+		Time.timeScale = stopTimeScale;
 	}
 
 	// Initial game setup - Paddle and Bricks
@@ -328,6 +362,9 @@ public class GM : MonoBehaviour {
 
 		// Level Complete
 		if (SpawnBricks.instance.bricks < 1) {
+			if (LevelManager.instance.levelNum == -99 && LevelManager.instance.levelEditor == true) {
+				LevelEditorButton.GetComponent<Menu> ().LoadLevelEditor ();
+			} else {
 			youWon.SetActive (true);
 			Time.timeScale = .25f;
 			balls = GameObject.FindGameObjectsWithTag ("Ball");
@@ -362,8 +399,10 @@ public class GM : MonoBehaviour {
 				Destroy (cloneLasers);
 			}
 
-			Invoke ("Won", resetDelay);
+
+				Invoke ("Won", resetDelay);
 		//	Won();
+			}
 
 		}
 
@@ -390,7 +429,12 @@ public class GM : MonoBehaviour {
 
 		// Set up next level
 		SetupPaddle ();
-		SpawnBricks.instance.InstantiateBricks ();
+
+		if (SpawnBricks.instance.levelNum == LevelManager.instance.levelsArray.Length) {
+			SceneManager.LoadScene ("Menu");	
+		} else {
+			SpawnBricks.instance.InstantiateBricks ();
+		}
 		//moveToNextLevel = true;
 	}
 
@@ -491,10 +535,12 @@ public class GM : MonoBehaviour {
 	}
 
 	public void SetExplodingBricks() {
-		foreach (GameObject brick in bricksToChange) {
-			brick.GetComponent<Bricks> ().brickTypeNum = 12;
-			brick.GetComponent<Bricks> ().SetColour ();
-			brick.GetComponent<Bricks> ().AttachSpriteSheet();
+		if (bricksToChange != null) {
+			foreach (GameObject brick in bricksToChange) {
+				brick.GetComponent<Bricks> ().brickTypeNum = 12;
+				brick.GetComponent<Bricks> ().SetColour ();
+				brick.GetComponent<Bricks> ().AttachSpriteSheet ();
+			}
 		}
 		brickChangeCounter = 0;
 		System.Array.Resize (ref bricksToChange, brickChangeCounter);

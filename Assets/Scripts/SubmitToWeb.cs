@@ -9,6 +9,7 @@ public class SubmitToWeb : MonoBehaviour {
 	public GameObject askLevelNameUI;
 	public GameObject askCreatorNameUI;
 	public GameObject confirmUI;
+	public GameObject successUI;
 
 	public int rows = 20;
 	public int cols = 13;
@@ -84,6 +85,9 @@ public class SubmitToWeb : MonoBehaviour {
 
 	public void AskLevelName() {
 		DisableBrickInput ();
+		confirmUI.SetActive (false);
+		successUI.SetActive (false);
+		askCreatorNameUI.SetActive (false);
 		backgroundPanel.SetActive (true);
 		askLevelNameUI.SetActive (true);
 	}
@@ -93,6 +97,8 @@ public class SubmitToWeb : MonoBehaviour {
 		levelName = levelNameResult.text;
 		print (levelName);
 		askLevelNameUI.SetActive (false);
+		confirmUI.SetActive (false);
+		successUI.SetActive (false);
 		backgroundPanel.SetActive (true);
 		askCreatorNameUI.SetActive (true);
 	}
@@ -103,6 +109,7 @@ public class SubmitToWeb : MonoBehaviour {
 		askLevelNameUI.SetActive (false);
 		askCreatorNameUI.SetActive (false);
 		confirmUI.SetActive (false);
+		successUI.SetActive (false);
 	}
 		
 
@@ -113,8 +120,23 @@ public class SubmitToWeb : MonoBehaviour {
 		backgroundPanel.SetActive (true);
 		askLevelNameUI.SetActive (false);
 		askCreatorNameUI.SetActive (false);
+		successUI.SetActive (false);
 		confirmUI.SetActive (true);
 
+	}
+
+	public void Success() {
+		DisableBrickInput ();
+		backgroundPanel.SetActive (true);
+		askLevelNameUI.SetActive (false);
+		askCreatorNameUI.SetActive (false);
+		confirmUI.SetActive (false);
+		successUI.SetActive (true);
+
+	}
+
+	public void OpenCreatedLevelsLink() {
+		Application.OpenURL("https://thelarisnet.com/breakout/createdlevels/");
 	}
 
 	public void Submit() {
@@ -167,6 +189,7 @@ public class SubmitToWeb : MonoBehaviour {
 			if (www.error == null)
 			{
 				Debug.Log("WWW Ok!: " + www.data);
+			Success ();
 			} else {
 				Debug.Log("WWW Error: "+ www.error);
 			}    

@@ -7,6 +7,8 @@ public class PrintToConsole : MonoBehaviour {
 	public int rows = 20;
 	public int cols = 13;
 
+
+
 	public int[,] bricksArray = new int[,] {
 		//0  1  2  3  4  5  6  7  8  9  10 11 12
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //0

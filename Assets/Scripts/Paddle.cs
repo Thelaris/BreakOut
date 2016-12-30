@@ -24,18 +24,20 @@ public class Paddle : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
-		if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) {
-			float xPos = transform.position.x + (Input.GetAxis ("Mouse X"));
-			playerPos = new Vector3 (Mathf.Clamp (xPos, -9.25f, 9.25f), -13.75f, 0f);
-			transform.position = playerPos;
-		}
-
-		if(Application.isMobilePlatform) {
-			if (Input.touchCount > 0) {
-				pos = Camera.main.ScreenToWorldPoint (new Vector3 (Input.GetTouch (0).position.x, -13.75f, 0f));
-				playerPos = new Vector3 (pos.x, -13.75f, 0);
+		if (!GM.instance.gamePaused) {
+			if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) {
+			
+				float xPos = transform.position.x + (Input.GetAxis ("Mouse X"));
+				playerPos = new Vector3 (Mathf.Clamp (xPos, -9.25f, 9.25f), -13.75f, 0f);
 				transform.position = playerPos;
+			}
+
+			if (Application.isMobilePlatform) {
+				if (Input.touchCount > 0) {
+					pos = Camera.main.ScreenToWorldPoint (new Vector3 (Input.GetTouch (0).position.x, -13.75f, 0f));
+					playerPos = new Vector3 (pos.x, -13.75f, 0);
+					transform.position = playerPos;
+				}
 			}
 		}
 	}

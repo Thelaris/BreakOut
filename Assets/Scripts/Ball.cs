@@ -131,7 +131,7 @@ public class Ball : MonoBehaviour {
 
 				//	print (paddle.GetComponent<Rigidbody> ().velocity);
 
-				rotOffset = localPos.x * -160;
+				rotOffset = localPos.x * -90;
 
 				paddleRot = paddle.transform.rotation.eulerAngles;
 
